@@ -13,7 +13,7 @@ SERVICE="$DOMAIN/com.mikerosoft.mikey-mouse"
 
 if [[ ! -x "$APP_BIN" ]]; then
   echo "ERROR: staged app not found. Build it first:"
-  echo "  bash tools/mikey-mouse/build-app.sh"
+  echo "  bash build-app.sh (from your mikey-mouse clone)"
   exit 1
 fi
 
