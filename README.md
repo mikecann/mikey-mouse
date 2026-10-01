@@ -5,10 +5,10 @@ Makes a normal mouse feel at home on a Mac
 macOS
 
 <!-- media: hero -->
-<!-- ![mikey-mouse](docs/hero.png) -->
-<!-- /media: hero -->
+![Pressing the mouse's back button on a page in Safari, and Safari going back](docs/back-button.png)
 
-![A black mouse whose glowing side buttons send back and forward arrows toward a Finder window, with a ribbon of light rising from its scroll wheel](docs/header.webp)
+[Watch it run (5 seconds)](docs/demo.mp4)
+<!-- /media: hero -->
 
 ## What it is
 
