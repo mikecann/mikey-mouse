@@ -22,6 +22,16 @@ bash "$REPO_DIR/install.sh" "$CUSTOM_BIN"
 bash "$REPO_DIR/install.sh" "$CUSTOM_BIN"
 [[ "$(readlink "$CUSTOM_BIN/mikey-mouse")" == "$REPO_DIR/mikey-mouse" ]]
 
+# The installed launcher is a symlink, so it must find the scripts next to its
+# real path rather than in the bin directory. `stop` only runs kill.sh, which
+# uses the mocked launchctl and pkill. Also follow a relative link to that link.
+"$HOME/.local/bin/mikey-mouse" stop
+"$CUSTOM_BIN/mikey-mouse" stop
+mkdir -p "$TEST_DIR/chained"
+ln -s "../custom bin/mikey-mouse" "$TEST_DIR/chained/mikey-mouse"
+"$TEST_DIR/chained/mikey-mouse" stop
+rm "$TEST_DIR/chained/mikey-mouse"
+
 mkdir -p "$HOME/Library/LaunchAgents" "$HOME/Applications/Mikey Mouse.app"
 touch "$HOME/Library/LaunchAgents/com.mikerosoft.mikey-mouse.plist"
 touch "$HOME/Library/LaunchAgents/unrelated.plist" "$CUSTOM_BIN/other-tool"
