@@ -5,13 +5,14 @@ set -euo pipefail
 # install.sh symlinks this file into a bin directory, so follow the link (and
 # any relative links in a chain) to find the clone that holds the other scripts.
 # A loop rather than `readlink -f`, which older macOS readlink doesn't support.
+# `cd -P` so relative links resolve against the real directory, like the kernel.
 launcher="${BASH_SOURCE[0]}"
 while [[ -L "$launcher" ]]; do
-  launcher_dir="$(cd "$(dirname "$launcher")" && pwd)"
+  launcher_dir="$(cd -P "$(dirname "$launcher")" && pwd)"
   launcher="$(readlink "$launcher")"
   [[ "$launcher" = /* ]] || launcher="$launcher_dir/$launcher"
 done
-SCRIPT_DIR="$(cd "$(dirname "$launcher")" && pwd)"
+SCRIPT_DIR="$(cd -P "$(dirname "$launcher")" && pwd)"
 
 case "${1:-restart}" in
   restart|start)
