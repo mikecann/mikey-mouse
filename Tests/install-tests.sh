@@ -22,6 +22,26 @@ bash "$REPO_DIR/install.sh" "$CUSTOM_BIN"
 bash "$REPO_DIR/install.sh" "$CUSTOM_BIN"
 [[ "$(readlink "$CUSTOM_BIN/mikey-mouse")" == "$REPO_DIR/mikey-mouse" ]]
 
+# The installed launcher is a symlink, so it must find the scripts next to its
+# real path rather than in the bin directory. `stop` only runs kill.sh, which
+# uses the mocked launchctl and pkill. Also follow a relative link to that link.
+"$HOME/.local/bin/mikey-mouse" stop
+"$CUSTOM_BIN/mikey-mouse" stop
+mkdir -p "$TEST_DIR/chained"
+ln -s "../custom bin/mikey-mouse" "$TEST_DIR/chained/mikey-mouse"
+"$TEST_DIR/chained/mikey-mouse" stop
+rm "$TEST_DIR/chained/mikey-mouse"
+# Relative links resolve against the real directory, like the kernel does, even
+# when the bin directory is itself a symlink (say into a dotfiles repo) and a
+# decoy folder sits where the logical path would land.
+LINKS="$TEST_DIR/links"
+mkdir -p "$LINKS/dotfiles/macos/bin" "$LINKS/home" "$LINKS/tools" "$TEST_DIR/tools"
+ln -s "../dotfiles/macos/bin" "$LINKS/home/bin"
+ln -s "../../../tools/mikey-mouse" "$LINKS/dotfiles/macos/bin/mikey-mouse"
+ln -s "../../custom bin/mikey-mouse" "$LINKS/tools/mikey-mouse"
+"$LINKS/home/bin/mikey-mouse" stop
+rm -r "$LINKS" "$TEST_DIR/tools"
+
 mkdir -p "$HOME/Library/LaunchAgents" "$HOME/Applications/Mikey Mouse.app"
 touch "$HOME/Library/LaunchAgents/com.mikerosoft.mikey-mouse.plist"
 touch "$HOME/Library/LaunchAgents/unrelated.plist" "$CUSTOM_BIN/other-tool"
